@@ -1,12 +1,13 @@
 import { tickets } from '@/data/tickets.json';
 import TheTicket from '../Ticket/TheTicket';
+
 function TheTicketsList() {
   console.log(tickets);
 
   return (
-    <div className="grid gap-4">
+    <div className="grid w-full gap-4">
       {tickets
-        .sort((ticket) => (ticket.price > 0 ? 1 : -1))
+        .sort((a, b) => a.price - b.price)
         .map((ticket, id) => (
           <div key={id}>
             <TheTicket ticket={ticket} />

@@ -1,3 +1,6 @@
+'use client';
+import { useFilters } from '../../../store/useFilters';
+
 interface TheTicketProps {
   ticket: {
     origin: string;
@@ -21,7 +24,18 @@ function purl(stops: number) {
   }
   return `Без пересадок`;
 }
+function converterPrice(price: number, currency: string) {
+  switch (currency) {
+    case 'USD':
+      return Math.ceil(price / 103);
+    case 'EUR':
+      return Math.ceil(price / 109);
+    default:
+      return price;
+  }
+}
 function TheTicket({ ticket }: TheTicketProps) {
+  const { currency } = useFilters();
   const {
     origin,
     origin_name,
@@ -35,20 +49,24 @@ function TheTicket({ ticket }: TheTicketProps) {
     stops,
     price,
   } = ticket;
+
   return (
-    <div className="flex gap-4 p-4 bg-zinc-600 rounded-lg">
-      <div className="grid ">
+    <div className="flex gap-4 p-4 bg-zinc-600 rounded-lg text-white">
+      <div className="grid w-1/5 ">
         <div>{carrier}</div>
         <div>
           <button
-            className="bg-orange-600 rounded-lg
-          p-4">
-            Купить за {price}
+            className="bg-yellow-500 rounded-lg
+          px-4 py-2 grid w-full">
+            Купить
+            <span>
+              за {converterPrice(price, currency)} {currency}
+            </span>
           </button>
         </div>
       </div>
       <div className="flex flex-auto justify-between">
-        <div className="grid gap-4 basis-1/5">
+        <div className="grid gap-4 basis-1/4">
           <div>{departure_time}</div>
           <div>
             {origin}, {origin_name}
@@ -56,7 +74,7 @@ function TheTicket({ ticket }: TheTicketProps) {
           <div>{departure_date}</div>
         </div>
         <div>{purl(stops)}</div>
-        <div className="grid gap-4 basis-1/5">
+        <div className="grid gap-4 basis-1/4">
           <div>{arrival_time}</div>
           <div>
             {destination}, {destination_name}
